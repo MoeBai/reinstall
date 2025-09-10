@@ -3,9 +3,9 @@
 # shellcheck disable=SC2086
 
 set -eE
-confhome=https://raw.githubusercontent.com/bin456789/reinstall/main
-confhome_cn=https://cnb.cool/bin456789/reinstall/-/git/raw/main
-# confhome_cn=https://www.ghproxy.cc/https://raw.githubusercontent.com/bin456789/reinstall/main
+confhome=https://raw.githubusercontent.com/MoeBai/reinstall/main
+confhome_cn=https://cnb.cool/MoeBai/reinstall/-/git/raw/main
+# confhome_cn=https://www.ghproxy.cc/https://raw.githubusercontent.com/MoeBai/reinstall/main
 
 # 默认密码
 DEFAULT_PASSWORD=123@@@
@@ -1589,17 +1589,19 @@ Continue with DD?
             fi
         done
 
-        iso=$(curl -L https://fnnas.com/ | grep -o 'https://[^"]*\.iso' | head -1 | grep .)
-
-        # curl 7.82.0+
-        # curl -L --json '{"url":"'$iso'"}' https://www.fnnas.com/api/download-sign
-
-        iso=$(curl -L \
-            -d '{"url":"'$iso'"}' \
-            -H 'Content-Type: application/json' \
-            https://www.fnnas.com/api/download-sign |
-            grep -o 'https://[^"]*')
-
+        iso=$(curl -sL https://fnnas.com/ | grep -o 'https://[^"]*\.iso' | head -1)
+        
+        # 获取签名后的原始下载地址
+        iso=$(curl -sL --json "{\"url\":\"$iso\"}" https://www.fnnas.com/api/download-sign \
+            | grep -o 'https://[^"]*')
+        
+        # 提取文件名（去掉 ? 参数）
+        fname=${iso%%\?*}
+        fname=${fname##*/}
+        
+        # 拼接镜像站下载地址
+        iso="https://dl.qingzhiwlkj.top:1718/x86_64/iso/$fname"
+        
         test_url "$iso" iso
         eval "${step}_iso='$iso'"
     }
