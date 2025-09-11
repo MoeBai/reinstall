@@ -1600,7 +1600,7 @@ Continue with DD?
         fname=${fname##*/}
         
         # 拼接镜像站下载地址
-        iso="https://dl.qingzhiwlkj.top:1718/x86_64/iso/$fname"
+        iso="https://dl.qingzhiwlkj.top:1718/date/iso/x86_64/$fname"
         
         test_url "$iso" iso
         eval "${step}_iso='$iso'"
